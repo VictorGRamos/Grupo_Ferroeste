@@ -1,0 +1,1 @@
+class ApiNameNotValid implements Exception {}

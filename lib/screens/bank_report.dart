@@ -3,30 +3,62 @@ import 'package:grupo_ferroeste/components/sections/report_box.dart';
 import 'package:grupo_ferroeste/themes/main_theme.dart';
 import 'package:grupo_ferroeste/themes/theme_colors.dart';
 import '../components/header.dart';
+import 'package:grupo_ferroeste/components/bank_table.dart';
 
-class BankReport extends StatelessWidget {
-  const BankReport({super.key});
+import '../services/api_sap.dart';
+
+class BankReport extends StatefulWidget {
+  BankReport({super.key});
+
+  @override
+  State<BankReport> createState() => _BankReportState();
+}
+
+class _BankReportState extends State<BankReport> {
+  //ATRIBUTOS E VARIAVEIS
+
+  SapService service = SapService();
+  Future<List<Widget>>? widgetList;
+
+  //METODOS
+
+  @override
+  void initState() {
+    super.initState();
+    widgetList = buildWidgetList();
+  }
+
+  Future<List<Widget>> buildWidgetList() async {
+    List<dynamic> bankDataTable = [];
+    List<Widget> widgetList = [];
+
+    bankDataTable = await service.getSapData("APIMOBILE_BANK");
+    // widgetList.add(const Header());
+    for (var index in bankDataTable) {
+      widgetList.add(ReportBoxWithTitle(
+          widget: Container(), height: 200, title: index.title));
+    }
+
+    return widgetList;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
+      body: Column(
         children: [
           const Header(),
-          ReportBoxWithTitle(
-            widget: Container(),
-            height: 400,
-            title: 'Banco do Brasil - Mercado Externo',
-          ),
-          ReportBoxWithTitle(
-            widget: Container(),
-            height: 140,
-            title: 'Itáu Nassau - Mercado Externo',
-          ),
-          ReportBoxWithTitle(
-            widget: Container(),
-            height: 140,
-            title: 'Banco do Brasil - Nova York',
+          FutureBuilder(
+            future: widgetList,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator()); 
+              } else if (snapshot.hasData) {
+                List<Widget> wList = snapshot.data!;
+                return Expanded(child: ListView(children: wList,));
+              }
+              return const Center(child: CircularProgressIndicator());
+            },
           ),
         ],
       ),

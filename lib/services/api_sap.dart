@@ -1,6 +1,10 @@
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http_interceptor/http/http.dart';
+import '../exceptions/bank_report_exception.dart';
 import 'http_interceptor.dart';
+import 'package:grupo_ferroeste/models/bank.dart';
+
 
 class SapService {
   static const String sapConection =
@@ -13,11 +17,26 @@ class SapService {
     return sapConection;
   }
 
-  getSapData(String apiName) async {
+  Future<List<dynamic>> getSapData(String apiName) async {
+
+    await Future.delayed(Duration(seconds: 2));
+
     http.Response response = await client.post(Uri.parse(getSapConection()),
         headers: {"BUSINESS_OBJECT": apiName});
     if (response.statusCode != 200) {
-      //TODO pegar objeto que fará as linhas da tabela e retornar um lista desse objeto
+      throw Exception();
+    }
+
+    switch (apiName) {
+      case "APIMOBILE_BANK":
+        List<dynamic> jsonList = jsonDecode(response.body);
+        List<Bank> bankList = [];
+        for (var jsonMap in jsonList) {
+          bankList.add(Bank.fromJson(jsonMap));
+        }
+        return bankList;
+      default: 
+        throw ApiNameNotValid();
     }
   }
 }

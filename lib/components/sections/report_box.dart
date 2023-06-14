@@ -26,6 +26,7 @@ class ReportBoxWithTitle extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
+          //TODO see if you can change Container for SIZED BOX
           Container(
             decoration: BoxDecoration(
               color: MainThemeColors.reportBox,
