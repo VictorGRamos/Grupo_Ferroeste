@@ -5,10 +5,10 @@ class BankTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: BuildDataTable(),
+        body: buildDataTable(),
       );
 
-  Widget BuildDataTable() {
+  Widget buildDataTable() {
     final columns = ['Data', 'Cliente'];
 
     return DataTable(columns: getColumns(columns), rows: getRows(),);

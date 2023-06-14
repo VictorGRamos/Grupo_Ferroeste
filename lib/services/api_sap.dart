@@ -19,8 +19,6 @@ class SapService {
 
   Future<List<dynamic>> getSapData(String apiName) async {
 
-    await Future.delayed(Duration(seconds: 2));
-
     http.Response response = await client.post(Uri.parse(getSapConection()),
         headers: {"BUSINESS_OBJECT": apiName});
     if (response.statusCode != 200) {

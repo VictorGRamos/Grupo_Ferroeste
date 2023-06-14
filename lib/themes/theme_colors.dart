@@ -8,4 +8,6 @@ class MainThemeColors {
 
   static const Color reportBox = Color.fromARGB(255, 75, 75, 75);
 
+  static const Color circularProgressIndicator = Color.fromARGB(255, 75, 75, 75);
+
 }
