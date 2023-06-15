@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:grupo_ferroeste/components/bank_table.dart';
 import 'package:grupo_ferroeste/components/sections/report_box.dart';
 import 'package:grupo_ferroeste/themes/main_theme.dart';
 import 'package:grupo_ferroeste/themes/theme_colors.dart';
 import '../components/header.dart';
-
 import '../services/api_sap.dart';
 
 class BankReport extends StatefulWidget {
@@ -32,10 +32,9 @@ class _BankReportState extends State<BankReport> {
     List<Widget> widgetList = [];
 
     bankDataTable = await service.getSapData("APIMOBILE_BANK");
-    // widgetList.add(const Header());
     for (var index in bankDataTable) {
       widgetList.add(ReportBoxWithTitle(
-          widget: Container(), height: 200, title: index.title));
+          widget: BankTable(bankSaldo: index.saldo,), title: index.title));
     }
 
     return widgetList;
@@ -62,9 +61,10 @@ class _BankReportState extends State<BankReport> {
               } else if (snapshot.hasData) {
                 List<Widget> wList = snapshot.data!;
                 return Expanded(
-                    child: ListView(
-                  children: wList,
-                ));
+                  child: ListView(
+                    children: wList,
+                  ),
+                );
               }
               return Padding(
                 padding: EdgeInsets.only(

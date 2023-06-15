@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:grupo_ferroeste/themes/theme_colors.dart';
 
 class ReportBoxWithTitle extends StatelessWidget {
-  final double height;
   final Widget widget;
   final String title;
 
   const ReportBoxWithTitle(
       {super.key,
       required this.widget,
-      required this.height,
       required this.title});
 
   @override
@@ -26,14 +24,13 @@ class ReportBoxWithTitle extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
-          //TODO see if you can change Container for SIZED BOX
           Container(
             decoration: BoxDecoration(
               color: MainThemeColors.reportBox,
               boxShadow: const [BoxShadow(blurRadius: 6)],
               borderRadius: BorderRadius.circular(15),
             ),
-            height: height,
+            width: double.maxFinite,
             child: widget,
           ),
         ],
