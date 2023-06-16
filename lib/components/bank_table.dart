@@ -3,6 +3,7 @@ import 'package:grupo_ferroeste/exceptions/bank_report_exception.dart';
 import 'package:grupo_ferroeste/models/bank.dart';
 
 import '../helpers/formats.dart';
+import '../themes/main_theme.dart';
 
 class BankTable extends StatelessWidget {
   final List<Saldo> bankSaldo;
@@ -18,6 +19,7 @@ class BankTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     defineReportType();
+    sumSaldo();
     return buildDataTable(context);
   }
 
@@ -30,7 +32,7 @@ class BankTable extends StatelessWidget {
           columnSpacing: columnSpacing,
           headingRowColor:
               MaterialStateProperty.resolveWith((states) => Colors.grey[850]),
-          headingTextStyle: const TextStyle(fontSize: 16),
+          headingTextStyle:Font.titleFont,
           columns: getColumns(context),
           rows: getRows(context),
         ),
@@ -45,7 +47,7 @@ class BankTable extends StatelessWidget {
           return DataColumn(
               label: SizedBox(
                   width: getWidgetWidth(context) / columnsLenght,
-                  child: Center(child: Text(columns))));
+                  child: Center(child: Text(columns, style: Font.titleFont,))));
         },
       ).toList();
     } else {
@@ -74,7 +76,9 @@ class BankTable extends StatelessWidget {
                   child: Center(child: Text(index.nomeEmpresa!)))),
               DataCell(SizedBox(
                   width: getWidgetWidth(context) / columns.length,
-                  child: Center(child: Text(DataFormats(valueFormat: index.saldo!).valueToUsd())))),
+                  child: Center(
+                      child: Text(DataFormats(valueFormat: index.saldo!)
+                          .valueToUsd())))),
             ],
           ),
         );
@@ -86,23 +90,50 @@ class BankTable extends StatelessWidget {
             cells: [
               DataCell(SizedBox(
                   width: getWidgetWidth(context) / 3,
-                  child: Center(child: Text(DataFormats(dateString: index.data!).stringToDate())))),
+                  child: Center(
+                      child: Text(DataFormats(dateString: index.data!)
+                          .stringToDate())))),
               DataCell(SizedBox(
                   width: getWidgetWidth(context) / 3,
                   child: Center(child: Text(index.clientes!)))),
               DataCell(SizedBox(
                   width: getWidgetWidth(context) / 3,
-                  child: Center(child: Text(DataFormats(valueFormat: index.valor!).valueToUsd())))),
+                  child: Center(
+                      child: Text(DataFormats(valueFormat: index.valor!)
+                          .valueToUsd())))),
               DataCell(SizedBox(
                   width: getWidgetWidth(context) / 3,
                   child: Center(child: Text(index.situacao!)))),
               DataCell(SizedBox(
                   width: getWidgetWidth(context) / 3,
-                  child: Center(child: Text(DataFormats(valueFormat: index.saldo).valueToUsd())))),
+                  child: Center(
+                      child: Text(DataFormats(valueFormat: index.saldo)
+                          .valueToUsd())))),
             ],
           ),
         );
       }
+      rows.add(DataRow(cells: [
+        DataCell(SizedBox(
+            width: getWidgetWidth(context) / 3,
+            child:Center(
+                child: Text(
+              'Total saldo:',
+              style: Font.titleFont,
+            )))),
+        DataCell(Container()),
+        DataCell(Container()),
+        DataCell(Container()),
+        DataCell(Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: SizedBox(
+              child: Center(
+                  child: Text(
+            DataFormats(valueFormat: sumSaldo()).valueToUsd(),
+            style:Font.sumRowFont,
+          ))),
+        )),
+      ]));
     }
     return rows;
   }
@@ -125,5 +156,15 @@ class BankTable extends StatelessWidget {
       isShortReport = false;
       columnSpacing = 20;
     }
+  }
+
+  double sumSaldo() {
+    double totalSaldo = 0;
+    for (var index in bankSaldo) {
+      if (index.saldo != null) {
+        totalSaldo = totalSaldo + index.saldo!;
+      }
+    }
+    return totalSaldo;
   }
 }
