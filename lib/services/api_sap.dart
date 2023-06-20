@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:grupo_ferroeste/data/database_dao.dart';
+import 'package:grupo_ferroeste/helpers/formats.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_interceptor/http/http.dart';
 import '../exceptions/bank_report_exception.dart';
 import 'http_interceptor.dart';
 import 'package:grupo_ferroeste/models/bank.dart';
-
 
 class SapService {
   static const String sapConection =
@@ -14,28 +15,37 @@ class SapService {
   http.Client client =
       InterceptedClient.build(interceptors: [LoggingInterceptor()]);
 
+  DatabaseDao localDatabase = DatabaseDao();
+
   String getSapConection() {
     return sapConection;
   }
 
   Future<List<dynamic>> getSapData(String apiName) async {
-
     http.Response response = await client.post(Uri.parse(getSapConection()),
         headers: {"BUSINESS_OBJECT": apiName});
     if (response.statusCode != 200) {
-      throw HttpException('A requisição HTTP falhou. \n Body: ${response.body} \n StatusCode: ${response.statusCode}');
+      throw HttpException(
+          'A requisição HTTP falhou. \n Body: ${response.body} \n StatusCode: ${response.statusCode}');
     }
 
     switch (apiName) {
       case "APIMOBILE_BANK":
-        List<dynamic> jsonList = jsonDecode(response.body);
-        List<Bank> bankList = [];
-        for (var jsonMap in jsonList) {
-          bankList.add(Bank.fromJson(jsonMap));
-        }
+        List<Bank> bankList = bodyToList(response.body);
+        await localDatabase.save(
+            DataFormats().latestUpdate(), response.body, apiName);
         return bankList;
-      default: 
+      default:
         throw ApiNameNotValid(message: apiName);
     }
+  }
+
+  List<Bank> bodyToList(String responseBody) {
+    List<dynamic> jsonList = jsonDecode(responseBody);
+    List<Bank> bankList = [];
+    for (var jsonMap in jsonList) {
+      bankList.add(Bank.fromJson(jsonMap));
+    }
+    return bankList;
   }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:grupo_ferroeste/components/bank_table.dart';
 import 'package:grupo_ferroeste/components/sections/report_box.dart';
+import 'package:grupo_ferroeste/data/database_dao.dart';
 import 'package:grupo_ferroeste/helpers/formats.dart';
+import 'package:grupo_ferroeste/models/bank.dart';
 import 'package:grupo_ferroeste/themes/main_theme.dart';
 import 'package:grupo_ferroeste/themes/theme_colors.dart';
 import '../components/header.dart';
@@ -18,8 +20,10 @@ class _BankReportState extends State<BankReport> {
   //ATRIBUTOS E VARIAVEIS
 
   SapService service = SapService();
+  DatabaseDao localDatabase = DatabaseDao();
   Future<List<Widget>>? widgetList;
-  String latestUpdateIn = ''; //variavel pra guardar data do consumo da api (data das informações)
+  String latestUpdateIn =
+      ''; //variavel pra guardar data do consumo da api (data das informações)
 
   //METODOS
 
@@ -33,13 +37,24 @@ class _BankReportState extends State<BankReport> {
     List<dynamic> bankDataTable = [];
     List<Widget> widgetList = [];
 
+    //Preenche campo com data atual do consumo da api, se api der erro a data será substituida pela ultima data salva localmente
+    if (latestUpdateIn.isEmpty) {
+      latestUpdateIn = DataFormats().latestUpdate();
+    }
+
+    //Tenta pegar os dados da API, se falhar, pega os ultimos dados salvos localmente  
     try {
       bankDataTable = await service.getSapData("APIMOBILE_BANK");
     } catch (e) {
-      //TODO handle exception better
-      return widgetList;
-    }
+      //se API der erro, pega o ultimo registro local salvo
+      List<Map<String, dynamic>> localRegister =
+          await localDatabase.readLatestByApiName('APIMOBILE_BANK');
 
+      bankDataTable = service.bodyToList(localRegister[0]['json']);
+      setState(() {
+        latestUpdateIn = localRegister[0]['date'];
+      });
+    }
 
     for (var index in bankDataTable) {
       widgetList.add(ReportBoxWithTitle(
@@ -50,7 +65,6 @@ class _BankReportState extends State<BankReport> {
     }
 
     return widgetList;
-
   }
 
   @override
@@ -58,7 +72,7 @@ class _BankReportState extends State<BankReport> {
     return Scaffold(
       body: Column(
         children: [
-          Header(latestUpdateIn:  DataFormats().latestUpdate()),
+          Header(latestUpdateIn: latestUpdateIn),
           FutureBuilder(
             future: widgetList,
             builder: (context, snapshot) {

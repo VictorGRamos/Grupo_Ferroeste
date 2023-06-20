@@ -7,7 +7,10 @@ Future<Database> getLocalDatabase() async {
   return openDatabase(
     path,
     onCreate: ((db, version) {
-      db.execute(DatabaseDao.tableSql);
+      db.execute(
+        DatabaseDao.tableSql,
+      );
     }),
+    version: 1,
   );
 }
