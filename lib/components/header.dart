@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:grupo_ferroeste/themes/main_theme.dart';
 
 class Header extends StatefulWidget {
-  const Header({super.key});
+
+  String latestUpdateIn;
+
+  Header({required this.latestUpdateIn, super.key});
 
   @override
   State<Header> createState() => _HeaderState();
 }
 
 class _HeaderState extends State<Header> {
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,9 +39,9 @@ class _HeaderState extends State<Header> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.end,
-              children: const [
-                Text('Última atualização em:'),
-                Text('29/05 às 11:41')
+              children: [
+                const Text('Última atualização em:'),
+                Text(widget.latestUpdateIn)
               ],
             ),
           )

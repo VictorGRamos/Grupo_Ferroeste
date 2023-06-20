@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http_interceptor/http/http.dart';
 import '../exceptions/bank_report_exception.dart';
@@ -22,7 +23,7 @@ class SapService {
     http.Response response = await client.post(Uri.parse(getSapConection()),
         headers: {"BUSINESS_OBJECT": apiName});
     if (response.statusCode != 200) {
-      throw Exception();
+      throw HttpException('A requisição HTTP falhou. \n Body: ${response.body} \n StatusCode: ${response.statusCode}');
     }
 
     switch (apiName) {
@@ -34,7 +35,7 @@ class SapService {
         }
         return bankList;
       default: 
-        throw ApiNameNotValid();
+        throw ApiNameNotValid(message: apiName);
     }
   }
 }

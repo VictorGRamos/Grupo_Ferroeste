@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grupo_ferroeste/components/bank_table.dart';
 import 'package:grupo_ferroeste/components/sections/report_box.dart';
+import 'package:grupo_ferroeste/helpers/formats.dart';
 import 'package:grupo_ferroeste/themes/main_theme.dart';
 import 'package:grupo_ferroeste/themes/theme_colors.dart';
 import '../components/header.dart';
@@ -18,6 +19,7 @@ class _BankReportState extends State<BankReport> {
 
   SapService service = SapService();
   Future<List<Widget>>? widgetList;
+  String latestUpdateIn = ''; //variavel pra guardar data do consumo da api (data das informações)
 
   //METODOS
 
@@ -31,13 +33,24 @@ class _BankReportState extends State<BankReport> {
     List<dynamic> bankDataTable = [];
     List<Widget> widgetList = [];
 
-    bankDataTable = await service.getSapData("APIMOBILE_BANK");
+    try {
+      bankDataTable = await service.getSapData("APIMOBILE_BANK");
+    } catch (e) {
+      //TODO handle exception better
+      return widgetList;
+    }
+
+
     for (var index in bankDataTable) {
       widgetList.add(ReportBoxWithTitle(
-          widget: BankTable(bankSaldo: index.saldo,), title: index.title));
+          widget: BankTable(
+            bankSaldo: index.saldo,
+          ),
+          title: index.title));
     }
 
     return widgetList;
+
   }
 
   @override
@@ -45,7 +58,7 @@ class _BankReportState extends State<BankReport> {
     return Scaffold(
       body: Column(
         children: [
-          const Header(),
+          Header(latestUpdateIn:  DataFormats().latestUpdate()),
           FutureBuilder(
             future: widgetList,
             builder: (context, snapshot) {
@@ -59,19 +72,34 @@ class _BankReportState extends State<BankReport> {
                   ),
                 );
               } else if (snapshot.hasData) {
-                List<Widget> wList = snapshot.data!;
-                return Expanded(
-                  child: ListView(
-                    children: wList,
-                  ),
-                );
+                if (snapshot.data!.isNotEmpty) {
+                  List<Widget> wList = snapshot.data!;
+                  return Expanded(
+                    child: ListView(
+                      children: wList,
+                    ),
+                  );
+                }
               }
-              return Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.40),
-                child: CircularProgressIndicator(
-                  color: mainTheme.primaryColor,
-                  backgroundColor: MainThemeColors.circularProgressIndicator,
+              //TODO verificar snapshot.hasError == true, se tiver erro a api não funcionou. Melhorar tratativa
+              //| ideia 1 = Set State pra tentar novamente
+              //| Ideia 2 = Metodo POST pra enviar pro SAP um log de erro e tratar no sap
+              return InkWell(
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.40,
+                        bottom: MediaQuery.of(context).size.height * 0.45),
+                    child: CircularProgressIndicator(
+                        color: mainTheme.primaryColor,
+                        backgroundColor:
+                            MainThemeColors.circularProgressIndicator),
+                  ),
+                ),
+                onTap: () => setState(
+                  () {
+                    widgetList = buildWidgetList();
+                  },
                 ),
               );
             },

@@ -22,9 +22,22 @@ class DataFormats {
   }
 
   String valueToUsd() {
-
     String currency = numberFormat.format(valueFormat);
     return currency;
+  }
 
+  String latestUpdate() {
+
+    String dateNow = DateTime.now().subtract(const Duration(hours: 3)).toString();
+
+    String latestUpdate = '${dateNow.substring(8, 10)}'
+        '/'
+        '${dateNow.substring(5, 7)}'
+        ' às '
+        '${dateNow.substring(11, 13)}'
+        ':'
+        '${dateNow.substring(14, 16)}';
+
+    return latestUpdate;
   }
 }
