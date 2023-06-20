@@ -44,11 +44,11 @@ class _BankReportState extends State<BankReport> {
 
     //Tenta pegar os dados da API, se falhar, pega os ultimos dados salvos localmente  
     try {
-      bankDataTable = await service.getSapData("APIMOBILE_BANK");
+      bankDataTable = await service.getSapData(ApiNames.apiMobileBank);
     } catch (e) {
       //se API der erro, pega o ultimo registro local salvo
       List<Map<String, dynamic>> localRegister =
-          await localDatabase.readLatestByApiName('APIMOBILE_BANK');
+          await localDatabase.readLatestByApiName(ApiNames.apiMobileBank);
 
       bankDataTable = service.bodyToList(localRegister[0]['json']);
       setState(() {
@@ -96,7 +96,7 @@ class _BankReportState extends State<BankReport> {
                 }
               }
               //TODO verificar snapshot.hasError == true, se tiver erro a api não funcionou. Melhorar tratativa
-              //| ideia 1 = Set State pra tentar novamente
+              //| ideia 1 = Set State pra tentar novamente || voltar pra tela inicial quando ela existir
               //| Ideia 2 = Metodo POST pra enviar pro SAP um log de erro e tratar no sap
               return InkWell(
                 child: Center(

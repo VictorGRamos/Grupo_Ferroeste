@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grupo_ferroeste/exceptions/bank_report_exception.dart';
 import 'package:grupo_ferroeste/models/bank.dart';
+import 'package:grupo_ferroeste/themes/theme_colors.dart';
 
 import '../helpers/formats.dart';
 import '../themes/main_theme.dart';
@@ -30,9 +31,9 @@ class BankTable extends StatelessWidget {
         child: DataTable(
           horizontalMargin: 0,
           columnSpacing: columnSpacing,
-          headingRowColor:
-              MaterialStateProperty.resolveWith((states) => Colors.grey[850]),
-          headingTextStyle:Font.titleFont,
+          headingRowColor: MaterialStateProperty.resolveWith(
+              (states) => MainThemeColors.headingRowColor),
+          headingTextStyle: Font.titleFont,
           columns: getColumns(context),
           rows: getRows(context),
         ),
@@ -47,7 +48,11 @@ class BankTable extends StatelessWidget {
           return DataColumn(
               label: SizedBox(
                   width: getWidgetWidth(context) / columnsLenght,
-                  child: Center(child: Text(columns, style: Font.titleFont,))));
+                  child: Center(
+                      child: Text(
+                    columns,
+                    style: Font.titleFont,
+                  ))));
         },
       ).toList();
     } else {
@@ -55,7 +60,7 @@ class BankTable extends StatelessWidget {
         (String columns) {
           return DataColumn(
               label: SizedBox(
-                  width: getWidgetWidth(context) / 3,
+                  width: tableWidthByOrientation(context),
                   child: Center(child: Text(columns))));
         },
       ).toList();
@@ -89,23 +94,23 @@ class BankTable extends StatelessWidget {
           DataRow(
             cells: [
               DataCell(SizedBox(
-                  width: getWidgetWidth(context) / 3,
+                  width: tableWidthByOrientation(context),
                   child: Center(
                       child: Text(DataFormats(dateString: index.data!)
                           .stringToDate())))),
               DataCell(SizedBox(
-                  width: getWidgetWidth(context) / 3,
+                  width: tableWidthByOrientation(context),
                   child: Center(child: Text(index.clientes!)))),
               DataCell(SizedBox(
-                  width: getWidgetWidth(context) / 3,
+                  width: tableWidthByOrientation(context),
                   child: Center(
                       child: Text(DataFormats(valueFormat: index.valor!)
                           .valueToUsd())))),
               DataCell(SizedBox(
-                  width: getWidgetWidth(context) / 3,
+                  width: tableWidthByOrientation(context),
                   child: Center(child: Text(index.situacao!)))),
               DataCell(SizedBox(
-                  width: getWidgetWidth(context) / 3,
+                  width: tableWidthByOrientation(context),
                   child: Center(
                       child: Text(DataFormats(valueFormat: index.saldo)
                           .valueToUsd())))),
@@ -115,8 +120,8 @@ class BankTable extends StatelessWidget {
       }
       rows.add(DataRow(cells: [
         DataCell(SizedBox(
-            width: getWidgetWidth(context) / 3,
-            child:Center(
+            width: tableWidthByOrientation(context),
+            child: Center(
                 child: Text(
               'Total saldo:',
               style: Font.titleFont,
@@ -130,7 +135,7 @@ class BankTable extends StatelessWidget {
               child: Center(
                   child: Text(
             DataFormats(valueFormat: sumSaldo()).valueToUsd(),
-            style:Font.sumRowFont,
+            style: Font.sumRowFont,
           ))),
         )),
       ]));
@@ -166,5 +171,12 @@ class BankTable extends StatelessWidget {
       }
     }
     return totalSaldo;
+  }
+
+  double tableWidthByOrientation(context) {
+    double width = MediaQuery.of(context).size.width - 32; //32 é o padding
+    return MediaQuery.of(context).orientation == Orientation.portrait
+        ? width / 3
+        : width / 5;
   }
 }

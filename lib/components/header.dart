@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:grupo_ferroeste/themes/main_theme.dart';
 
 class Header extends StatefulWidget {
-
   String latestUpdateIn;
 
   Header({required this.latestUpdateIn, super.key});
@@ -12,17 +11,19 @@ class Header extends StatefulWidget {
 }
 
 class _HeaderState extends State<Header> {
-  
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: AlignmentDirectional.center,
       width: double.infinity,
-      height:
-          MediaQuery.of(context).size.height * 0.10, //10% do tamanho da tela
+      height: MediaQuery.of(context).orientation == Orientation.portrait
+          ? MediaQuery.of(context).size.height * 0.10
+          : MediaQuery.of(context).size.height * 0.15, //10% do tamanho da tela
       decoration: BoxDecoration(
         color: mainTheme.primaryColor,
-        boxShadow: const [BoxShadow(blurRadius: 5),],
+        boxShadow: const [
+          BoxShadow(blurRadius: 5),
+        ],
         borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
       ),

@@ -30,7 +30,7 @@ class SapService {
     }
 
     switch (apiName) {
-      case "APIMOBILE_BANK":
+      case ApiNames.apiMobileBank:
         List<Bank> bankList = bodyToList(response.body);
         await localDatabase.save(
             DataFormats().latestUpdate(), response.body, apiName);
@@ -48,4 +48,10 @@ class SapService {
     }
     return bankList;
   }
+}
+
+class ApiNames {
+  static const String apiMobileBank = 'APIMOBILE_BANK';
+
+
 }

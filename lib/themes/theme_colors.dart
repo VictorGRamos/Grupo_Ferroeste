@@ -10,4 +10,6 @@ class MainThemeColors {
 
   static const Color circularProgressIndicator = Color.fromARGB(255, 75, 75, 75);
 
+  static const Color headingRowColor = Color.fromARGB(255, 48, 48, 48);
+
 }
