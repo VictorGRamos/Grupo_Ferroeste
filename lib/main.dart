@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grupo_ferroeste/screens/bank_report.dart';
+import 'package:grupo_ferroeste/screens/login.dart';
 import 'themes/main_theme.dart';
 
 void main() {
@@ -15,7 +15,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: 'Grupo Ferroeste',
       theme: mainTheme,
-      home: const BankReport(),
+      home: const Login(),
     );
   }
 }

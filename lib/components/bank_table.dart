@@ -6,6 +6,7 @@ import 'package:grupo_ferroeste/themes/theme_colors.dart';
 import '../helpers/formats.dart';
 import '../themes/main_theme.dart';
 
+// ignore: must_be_immutable
 class BankTable extends StatelessWidget {
   final List<Saldo> bankSaldo;
 

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:grupo_ferroeste/themes/main_theme.dart';
 
 class Header extends StatefulWidget {
-  String latestUpdateIn;
+  final String latestUpdateIn;
 
-  Header({required this.latestUpdateIn, super.key});
+  const Header({required this.latestUpdateIn, super.key});
 
   @override
   State<Header> createState() => _HeaderState();
@@ -32,6 +32,8 @@ class _HeaderState extends State<Header> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
             onPressed: () {},
             icon: const Icon(Icons.arrow_back_rounded),
           ),

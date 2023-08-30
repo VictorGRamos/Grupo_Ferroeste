@@ -3,7 +3,6 @@ import 'package:grupo_ferroeste/components/bank_table.dart';
 import 'package:grupo_ferroeste/components/sections/report_box.dart';
 import 'package:grupo_ferroeste/data/database_dao.dart';
 import 'package:grupo_ferroeste/helpers/formats.dart';
-import 'package:grupo_ferroeste/models/bank.dart';
 import 'package:grupo_ferroeste/themes/main_theme.dart';
 import 'package:grupo_ferroeste/themes/theme_colors.dart';
 import '../components/header.dart';
@@ -96,8 +95,9 @@ class _BankReportState extends State<BankReport> {
                 }
               }
               //TODO verificar snapshot.hasError == true, se tiver erro a api não funcionou. Melhorar tratativa
-              //| ideia 1 = Set State pra tentar novamente || voltar pra tela inicial quando ela existir
+              //| Ideia 1 = Set State pra tentar novamente || voltar pra tela inicial quando ela existir
               //| Ideia 2 = Metodo POST pra enviar pro SAP um log de erro e tratar no sap
+              //| Ideia 3 = adicionar timeout pra requisição 
               return InkWell(
                 child: Center(
                   child: Padding(
