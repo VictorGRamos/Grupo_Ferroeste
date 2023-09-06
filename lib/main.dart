@@ -15,7 +15,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: 'Grupo Ferroeste',
       theme: mainTheme,
-      home: const Login(),
+      home: Login(),
     );
   }
 }

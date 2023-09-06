@@ -31,7 +31,7 @@ class SapService {
 
     switch (apiName) {
       case ApiNames.apiMobileBank:
-        List<Bank> bankList = bodyToList(response.body);
+        List<Bank> bankList = bodyToBankList(response.body);
         await localDatabase.save(
             DataFormats().latestUpdate(), response.body, apiName);
         return bankList;
@@ -40,7 +40,7 @@ class SapService {
     }
   }
 
-  List<Bank> bodyToList(String responseBody) {
+  List<Bank> bodyToBankList(String responseBody) {
     List<dynamic> jsonList = jsonDecode(responseBody);
     List<Bank> bankList = [];
     for (var jsonMap in jsonList) {

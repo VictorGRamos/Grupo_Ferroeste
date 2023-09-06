@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:grupo_ferroeste/components/sections/text_form_login.dart';
-import 'package:grupo_ferroeste/helpers/regex_validation.dart';
 import 'package:grupo_ferroeste/themes/theme_colors.dart';
 import 'create_account.dart';
 
 class Login extends StatelessWidget {
-  const Login({super.key});
+  Login({super.key});
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,21 +27,23 @@ class Login extends StatelessWidget {
               Form(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
-                  children: const [
+                  children:[
                     TextFormLogin(
                         labelText: 'E-mail',
                         isPassword: false,
                         formIcon: Icons.email_outlined,
                         iconColor: MainThemeColors.loginFormsIconsColor,
                         borderColor: MainThemeColors.loginFormsBorderColor,
-                        textColor: MainThemeColors.loginFormsTextsColor),
+                        textColor: MainThemeColors.loginFormsTextsColor,
+                        controller: emailController,),
                     TextFormLogin(
                         labelText: 'Senha',
                         isPassword: true,
                         formIcon: Icons.lock_outline,
                         iconColor: MainThemeColors.loginFormsIconsColor,
                         borderColor: MainThemeColors.loginFormsBorderColor,
-                        textColor: MainThemeColors.loginFormsTextsColor),
+                        textColor: MainThemeColors.loginFormsTextsColor,
+                        controller: passwordController,),
                   ],
                 ),
               ),
@@ -85,7 +89,7 @@ class Login extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const CreateAccount()));
+                              builder: (context) => CreateAccount()));
                     },
                     child: const Text(
                       'Crie sua conta!',

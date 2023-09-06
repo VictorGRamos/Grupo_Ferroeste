@@ -49,7 +49,7 @@ class _BankReportState extends State<BankReport> {
       List<Map<String, dynamic>> localRegister =
           await localDatabase.readLatestByApiName(ApiNames.apiMobileBank);
 
-      bankDataTable = service.bodyToList(localRegister[0]['json']);
+      bankDataTable = service.bodyToBankList(localRegister[0]['json']);
       setState(() {
         latestUpdateIn = localRegister[0]['date'];
       });
