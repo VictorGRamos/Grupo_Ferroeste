@@ -96,7 +96,7 @@ class _BankReportState extends State<BankReport> {
               }
               //TODO verificar snapshot.hasError == true, se tiver erro a api não funcionou. Melhorar tratativa
               //| Ideia 1 = Set State pra tentar novamente || voltar pra tela inicial quando ela existir
-              //| Ideia 2 = Metodo POST pra enviar pro SAP um log de erro e tratar no sap
+              //| Ideia 2 = Metodo POST pra enviar pro SAP um log de erro
               //| Ideia 3 = adicionar timeout pra requisição 
               return InkWell(
                 child: Center(

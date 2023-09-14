@@ -22,8 +22,10 @@ class SapService {
   }
 
   Future<List<dynamic>> getSapData(String apiName) async {
-    http.Response response = await client.post(Uri.parse(getSapConection()),
-        headers: {"BUSINESS_OBJECT": apiName});
+    http.Response response = await client.post(
+      Uri.parse(getSapConection()),
+      headers: {"BUSINESS_OBJECT": apiName},
+    );
     if (response.statusCode != 200) {
       throw HttpException(
           'A requisição HTTP falhou. \n Body: ${response.body} \n StatusCode: ${response.statusCode}');
@@ -48,10 +50,18 @@ class SapService {
     }
     return bankList;
   }
+
+  errorLogToSap(String apiName, error) async {
+    var errorJson = jsonDecode(error);
+    await client.post(
+      Uri.parse(getSapConection()),
+      headers: {"BUSINESS_OBJECT": apiName},
+      body: errorJson
+    );
+  }
 }
 
 class ApiNames {
+  static const String apiLogError = 'APIMOBILE_ERROR_LOG';
   static const String apiMobileBank = 'APIMOBILE_BANK';
-
-
 }

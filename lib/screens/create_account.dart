@@ -56,24 +56,69 @@ class CreateAccount extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 20.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    loginObject.checkAccountExist(emailController.text).then(
-                      (value) {
-                        if (value == false) {
-                          loginObject.createAccont();
-                        } else {
-                          const snackBar = SnackBar(
-                            content: Text(
-                              'Esse e-mail já foi registrado',
-                              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-                            ),
-                            behavior: SnackBarBehavior.floating,
-                            elevation: 8,
-
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        }
-                      },
-                    );
+                    passwordConfirmController.text == passwordController.text
+                        ? loginObject
+                            .checkAccountExist(emailController.text)
+                            .then(
+                            (value) {
+                              if (value['error'] == true) {
+                                const snackBar = SnackBar(
+                                  content: Text(
+                                    'Erro ao tentar criar a conta! Contacte-o suporte!',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16),
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                  elevation: 8,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              }
+                              if (value['exists'] == false) {
+                                loginObject
+                                    .createAccont(emailController.text,
+                                        passwordController.text)
+                                    .then(
+                                  (value) {
+                                    if (value['bool'] == true) {
+                                      const snackBar = SnackBar(
+                                        content: Text(
+                                          'Conta criada com sucesso!',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16),
+                                        ),
+                                        behavior: SnackBarBehavior.floating,
+                                        elevation: 8,
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                      Navigator.pop(context);
+                                    } else {
+                                      //TODO Metodo POST pra enviar pro SAP um log de erro
+                                      var e = value['e'];
+                                      e['uri'].toString();
+                                    }
+                                  },
+                                );
+                              } else {
+                                const snackBar = SnackBar(
+                                  content: Text(
+                                    'Esse e-mail já foi registrado!',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16),
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                  elevation: 8,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              }
+                            },
+                          )
+                        : null;
                   },
                   style: ElevatedButton.styleFrom(
                       elevation: 7,
